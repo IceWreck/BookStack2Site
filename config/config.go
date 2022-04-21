@@ -1,6 +1,8 @@
 package config
 
-import "flag"
+import (
+	"flag"
+)
 
 const Version = "1.0.0"
 
@@ -20,16 +22,15 @@ func LoadConfig(app *Application) Config {
 	// Command line flags and their default values
 
 	// Required
-	settings.BookStackEndpoint = *flag.String("bookstack-url", "", "BookStack Endpoint")
-	settings.BookStackAPITokenID = *flag.String("token-id", "", "BookStack API Token ID")
-	settings.BookStackAPITokenSecret = *flag.String("token-secret", "", "BookStack API Token Secret")
+	flag.StringVar(&settings.BookStackEndpoint, "bookstack-url", "", "BookStack Endpoint")
+	flag.StringVar(&settings.BookStackAPITokenID, "token-id", "", "BookStack API Token ID")
+	flag.StringVar(&settings.BookStackAPITokenSecret, "token-secret", "", "BookStack API Token Secret")
 
 	// Optional
-	settings.Concurrency = *flag.Int("concurrency", 10, "Number of concurrent page downloads")
-	settings.GenerateHTML = *flag.Bool("generate-html", true, "Generate Static Site HTML or just markdown")
-	settings.MdBookLocation = *flag.String("mdbook-location", "mdbook", "Custom path of mdbook binary")
+	flag.IntVar(&settings.Concurrency, "concurrency", 10, "Number of concurrent page downloads")
+	flag.BoolVar(&settings.GenerateHTML, "generate-html", true, "Generate Static Site HTML or just markdown")
+	flag.StringVar(&settings.MdBookLocation, "mdbook-location", "mdbook", "Custom path of mdbook binary")
 
 	flag.Parse()
-
 	return settings
 }

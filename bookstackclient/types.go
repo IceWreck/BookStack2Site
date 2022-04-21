@@ -240,35 +240,37 @@ type Page struct {
 // Wiki is the BookStack2Site representation of a Wiki
 type Wiki struct {
 	Name  string
-	Books []struct {
-		BookID int
-		Name   string
-		Slug   string
-		// a book can have pages in chapters or independent pages
-		Chapters []struct {
-			ChapterID int
-			Name      string
-			Slug      string
-			Priority  int
-			Pages     []struct {
-				PageID   int
-				Name     string
-				Slug     string
-				Priority int
-			}
-		}
-		IndiePages []struct {
-			PageID   int
-			Name     string
-			Slug     string
-			Priority int
-		}
-	}
+	Books []WikiBook
 	// one book can be on multiple shelves
-	Shelves []struct {
-		ShelfID int
-		Name    string
-		Slug    string
-		BookIDs []int
-	}
+	Shelves []WikiShelf
+}
+
+type WikiShelf struct {
+	ShelfID int
+	Name    string
+	Slug    string
+	BookIDs []int
+}
+
+type WikiChapter struct {
+	ChapterID int
+	Name      string
+	Slug      string
+	Priority  int
+	Pages     []WikiPage
+}
+
+type WikiPage struct {
+	PageID   int
+	Name     string
+	Slug     string
+	Priority int
+}
+type WikiBook struct {
+	BookID int
+	Name   string
+	Slug   string
+	// a book can have pages in chapters or independent pages
+	Chapters   []WikiChapter
+	IndiePages []WikiPage
 }

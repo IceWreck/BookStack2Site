@@ -175,6 +175,10 @@ func FetchPages(app *config.Application, bookID int, chapterID int) (Chapters, e
 	return resStruct, nil
 }
 
+func FetchPageMarkdown(app *config.Application) {
+
+}
+
 func FetchWiki(app *config.Application) (Wiki, error) {
 	w := Wiki{
 		Name:    "",

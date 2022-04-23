@@ -265,6 +265,10 @@ type WikiPage struct {
 	Name     string
 	Slug     string
 	Priority int
+	// FilePath is path of file relative to root of wiki. To be filled while downloading.
+	// Should start with a '/'.
+	// Should not end with a '/'.
+	FilePath string
 }
 type WikiBook struct {
 	BookID int

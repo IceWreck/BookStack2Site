@@ -2,6 +2,7 @@ package config
 
 import (
 	"flag"
+	"path"
 )
 
 const Version = "1.0.0"
@@ -14,6 +15,7 @@ type Config struct {
 	GenerateHTML            bool   // generate static site HTML
 	MdBookLocation          string // path to the mdBook binary
 	Concurrency             int    // number of concurrent goroutines
+	DownloadLocation        string // path of downloaded markdown
 }
 
 func LoadConfig(app *Application) Config {
@@ -30,7 +32,13 @@ func LoadConfig(app *Application) Config {
 	flag.IntVar(&settings.Concurrency, "concurrency", 10, "Number of concurrent page downloads")
 	flag.BoolVar(&settings.GenerateHTML, "generate-html", true, "Generate Static Site HTML or just markdown")
 	flag.StringVar(&settings.MdBookLocation, "mdbook-location", "mdbook", "Custom path of mdbook binary")
+	flag.StringVar(&settings.DownloadLocation, "download-location", "./book", "Path of downloaded markdown")
 
 	flag.Parse()
+
+	// Clean up file paths.
+	settings.MdBookLocation = path.Clean(settings.MdBookLocation)
+	settings.DownloadLocation = path.Clean(settings.DownloadLocation)
+
 	return settings
 }

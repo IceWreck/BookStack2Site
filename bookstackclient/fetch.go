@@ -175,8 +175,22 @@ func FetchPages(app *config.Application, bookID int, chapterID int) (Chapters, e
 	return resStruct, nil
 }
 
-func FetchPageMarkdown(app *config.Application) {
-
+func FetchPageMarkdown(app *config.Application, pageID int) ([]byte, error) {
+	req, err := http.NewRequest("GET", fmt.Sprint(app.Config.BookStackEndpoint, fmt.Sprint("/api/pages/", pageID, "/export/markdown")), nil)
+	if err != nil {
+		return []byte(""), err
+	}
+	res, err := authenticatedDo(app, req)
+	if err != nil {
+		app.Logger.Debug().Err(err).Msg("performing request")
+		return []byte(""), err
+	}
+	body, err := io.ReadAll(res.Body)
+	if err != nil {
+		app.Logger.Debug().Err(err).Msg("reading body")
+		return []byte(""), err
+	}
+	return body, nil
 }
 
 func FetchWiki(app *config.Application) (Wiki, error) {

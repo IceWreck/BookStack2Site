@@ -22,10 +22,14 @@ func main() {
 		).With().Timestamp().Logger(),
 	}
 
-	zerolog.SetGlobalLevel(zerolog.InfoLevel)
-
 	app.Config = config.LoadConfig(app)
 	app.Logger.Info().Str("config", fmt.Sprint(app.Config)).Msg("")
+
+	if app.Config.VerboseLogs {
+		zerolog.SetGlobalLevel(zerolog.DebugLevel)
+	} else {
+		zerolog.SetGlobalLevel(zerolog.InfoLevel)
+	}
 
 	if app.Config.BookStackEndpoint == "" || app.Config.BookStackAPITokenID == "" || app.Config.BookStackAPITokenSecret == "" {
 		app.Logger.Fatal().Msg("BookStackEndpoint, BookStackAPITokenID, BookStackAPITokenSecret cannot be empty")

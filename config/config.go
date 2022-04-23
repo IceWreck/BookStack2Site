@@ -16,6 +16,8 @@ type Config struct {
 	MdBookLocation          string // path to the mdBook binary
 	Concurrency             int    // number of concurrent goroutines
 	DownloadLocation        string // path of downloaded markdown
+	VerboseLogs             bool   // print detailed logs
+	DownloadImages          bool   // download static images from the wiki as well
 }
 
 func LoadConfig(app *Application) Config {
@@ -33,6 +35,8 @@ func LoadConfig(app *Application) Config {
 	flag.BoolVar(&settings.GenerateHTML, "generate-html", true, "Generate Static Site HTML or just markdown")
 	flag.StringVar(&settings.MdBookLocation, "mdbook-location", "mdbook", "Custom path of mdbook binary")
 	flag.StringVar(&settings.DownloadLocation, "download-location", "./book", "Path of downloaded markdown")
+	flag.BoolVar(&settings.VerboseLogs, "verbose", false, "Print detailed logs")
+	flag.BoolVar(&settings.DownloadImages, "download-images", true, "Download static images from the wiki")
 
 	flag.Parse()
 

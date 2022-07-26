@@ -9,6 +9,7 @@ run:
 	go run ./cli \
 		--bookstack-url=$(BookStackEndpoint) \
 		--token-id=$(BookStackAPITokenID) \
-		--token-secret=$(BookStackAPITokenSecret)
+		--token-secret=$(BookStackAPITokenSecret) \
+		--download-location="./book-test/src"
 build:
 	go build -o ./bin/bookstack2site ./cli

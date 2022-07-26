@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 
 	"github.com/IceWreck/BookStack2Site/config"
 )
@@ -175,6 +176,8 @@ func FetchPages(app *config.Application, bookID int, chapterID int) (Chapters, e
 	return resStruct, nil
 }
 
+// FetchPageMarkdown hits the /api/pages/<pageid>/export/markdown endpoint
+// and returns a byte slice with APP_URL replaed by a /
 func FetchPageMarkdown(app *config.Application, pageID int) ([]byte, error) {
 	req, err := http.NewRequest("GET", fmt.Sprint(app.Config.BookStackEndpoint, fmt.Sprint("/api/pages/", pageID, "/export/markdown")), nil)
 	if err != nil {
@@ -190,6 +193,16 @@ func FetchPageMarkdown(app *config.Application, pageID int) ([]byte, error) {
 		app.Logger.Debug().Err(err).Msg("reading body")
 		return []byte(""), err
 	}
+	replacer := strings.NewReplacer(
+	// fmt.Sprint("](", app.Config.BookStackEndpoint, "/books/"), "](/",
+	// fmt.Sprint("](", app.Config.BookStackEndpoint, "/uploads"), "](/uploads",
+	// fmt.Sprint(`src="`, app.Config.BookStackEndpoint, "/uploads"), `src="/uploads`,
+	)
+
+	// TODO: replace the uploads as well after implementing img downloads
+
+	body = []byte(replacer.Replace(string(body)))
+
 	return body, nil
 }
 

@@ -6,6 +6,7 @@ content
 dist
 .env
 book
+book-test
 config.env
 
 # IDEs

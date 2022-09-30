@@ -14,38 +14,38 @@ import (
 func Download(app *config.Application) {
 
 	w, _ := bookstackclient.FetchWiki(app)
-	// sem := make(chan struct{}, app.Config.Concurrency)
+	sem := make(chan struct{}, app.Config.Concurrency)
 
 	var wg sync.WaitGroup
 
-	// for _, book := range w.Books {
-	// 	for _, chapter := range book.Chapters {
-	// 		for _, page := range chapter.Pages {
-	// 			wg.Add(1)
-	// 			sem <- struct{}{}
-	// 			page.FilePath = fmt.Sprint("/", book.Slug, "/", chapter.Slug, "/", page.Slug)
-	// 			go func(p bookstackclient.WikiPage) {
-	// 				defer wg.Done()
-	// 				downloadPage(app, p)
-	// 				// release semaphore
-	// 				<-sem
-	// 			}(page)
+	for _, book := range w.Books {
+		for _, chapter := range book.Chapters {
+			for _, page := range chapter.Pages {
+				wg.Add(1)
+				sem <- struct{}{}
+				page.FilePath = fmt.Sprint("/", book.Slug, "/", chapter.Slug, "/", page.Slug)
+				go func(p bookstackclient.WikiPage) {
+					defer wg.Done()
+					downloadPage(app, p)
+					// release semaphore
+					<-sem
+				}(page)
 
-	// 		}
-	// 	}
-	// 	for _, indiePage := range book.IndiePages {
+			}
+		}
+		for _, indiePage := range book.IndiePages {
 
-	// 		wg.Add(1)
-	// 		sem <- struct{}{}
-	// 		indiePage.FilePath = fmt.Sprint("/", book.Slug, "/", indiePage.Slug)
-	// 		go func(p bookstackclient.WikiPage) {
-	// 			defer wg.Done()
-	// 			downloadPage(app, p)
-	// 			// release semaphore
-	// 			<-sem
-	// 		}(indiePage)
-	// 	}
-	// }
+			wg.Add(1)
+			sem <- struct{}{}
+			indiePage.FilePath = fmt.Sprint("/", book.Slug, "/", indiePage.Slug)
+			go func(p bookstackclient.WikiPage) {
+				defer wg.Done()
+				downloadPage(app, p)
+				// release semaphore
+				<-sem
+			}(indiePage)
+		}
+	}
 
 	// Create the Summary.md file
 

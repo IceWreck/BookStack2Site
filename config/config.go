@@ -32,11 +32,11 @@ func LoadConfig(app *Application) Config {
 
 	// Optional
 	flag.IntVar(&settings.Concurrency, "concurrency", 10, "Number of concurrent page downloads")
-	flag.BoolVar(&settings.GenerateHTML, "generate-html", true, "Generate Static Site HTML or just markdown")
-	flag.StringVar(&settings.MdBookLocation, "mdbook-location", "mdbook", "Custom path of mdbook binary")
+	// flag.BoolVar(&settings.GenerateHTML, "generate-html", true, "Generate Static Site HTML or just markdown")
+	// flag.StringVar(&settings.MdBookLocation, "mdbook-location", "mdbook", "Custom path of mdbook binary")
 	flag.StringVar(&settings.DownloadLocation, "download-location", "./book", "Path of downloaded markdown")
 	flag.BoolVar(&settings.VerboseLogs, "verbose", false, "Print detailed logs")
-	flag.BoolVar(&settings.DownloadImages, "download-images", true, "Download static images from the wiki")
+	// flag.BoolVar(&settings.DownloadImages, "download-images", true, "Download static images from the wiki")
 
 	flag.Parse()
 

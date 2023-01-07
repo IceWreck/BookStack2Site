@@ -39,14 +39,6 @@ func main() {
 		Timeout: 120 * time.Second,
 	}
 
-	//fmt.Println(bookstackclient.FetchBooks(app))
-	//fmt.Println(bookstackclient.FetchChapters(app, 1))
-	//fmt.Println(bookstackclient.FetchPages(app, 10, 0))
-
-	// w, _ := bookstackclient.FetchWiki(app)
-	// jsonWiki, _ := json.Marshal(w)
-	// fmt.Println(string(jsonWiki))
-
 	app.Logger.Info().Msg("Trying to establish wiki structure. This might take a while.")
 	downloader.Download(app)
 }

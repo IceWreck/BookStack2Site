@@ -47,6 +47,8 @@ func Download(app *config.Application) {
 		}
 	}
 
+	wg.Wait()
+
 	// Create the Summary.md file
 
 	summaryContents := "# Summary\n"
@@ -73,9 +75,10 @@ func Download(app *config.Application) {
 	_, err = file.Write([]byte(summaryContents))
 	if err != nil {
 		app.Logger.Error().Err(err).Str("page", "SUMMARY.md").Msg("Error writing to file")
+	} else {
+		app.Logger.Info().Msg("Written SUMMARY.md")
 	}
 
-	wg.Wait()
 }
 
 func downloadPage(app *config.Application, page bookstackclient.WikiPage) {

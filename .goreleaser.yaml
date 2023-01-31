@@ -1,0 +1,17 @@
+project_name: bookstack2site
+
+build:
+  env:
+    - CGO_ENABLED=0
+
+  main: ./cli
+  binary: bookstack2site
+  goos:
+    - linux
+  goarch:
+    - amd64
+    - arm64
+
+archives:
+  - name_template: "{{.Os}}-{{.Arch}}-{{ .ProjectName }}"
+    format: tar.gz

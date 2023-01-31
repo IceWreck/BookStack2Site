@@ -5,7 +5,7 @@ import (
 	"path"
 )
 
-const Version = "1.0.0"
+const Version = "0.1.0"
 
 // Config struct to hold all the configuration settings for our application.
 type Config struct {

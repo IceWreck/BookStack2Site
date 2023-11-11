@@ -5,6 +5,7 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"sort"
 	"sync"
 
 	"github.com/IceWreck/BookStack2Site/bookstackclient"
@@ -54,16 +55,39 @@ func Download(app *config.Application) {
 	summaryContents := "# Summary\n"
 	for _, book := range w.Books {
 		summaryContents += "\n# " + book.Name + "\n\n"
+		priorityQueue := make([]interface{}, 0)
 		for _, chapter := range book.Chapters {
-			summaryContents += fmt.Sprint("- [", chapter.Name, "]()\n")
-
-			for _, page := range chapter.Pages {
-				summaryContents += fmt.Sprint("    - [", page.Name, "](", book.Slug, "/", chapter.Slug, "/", page.Slug, ".md)\n")
-
-			}
+			priorityQueue = append(priorityQueue, chapter)
 		}
 		for _, indiePage := range book.IndiePages {
-			summaryContents += fmt.Sprint("- [", indiePage.Name, "](", book.Slug, "/", indiePage.Slug, ".md)\n")
+			priorityQueue = append(priorityQueue, indiePage)
+		}
+		sort.Slice(priorityQueue, func(i, j int) bool {
+			var pi, pj int
+			switch priorityQueue[i].(type) {
+			case bookstackclient.WikiChapter:
+				pi = priorityQueue[i].(bookstackclient.WikiChapter).Priority
+			case bookstackclient.WikiPage:
+				pi = priorityQueue[i].(bookstackclient.WikiPage).Priority
+			}
+			switch priorityQueue[j].(type) {
+			case bookstackclient.WikiChapter:
+				pj = priorityQueue[j].(bookstackclient.WikiChapter).Priority
+			case bookstackclient.WikiPage:
+				pj = priorityQueue[j].(bookstackclient.WikiPage).Priority
+			}
+			return pi < pj
+		})
+		for _, item := range priorityQueue {
+			switch item := item.(type) {
+			case bookstackclient.WikiChapter:
+				summaryContents += fmt.Sprint("- [", item.Name, "]()\n")
+				for _, page := range item.Pages {
+					summaryContents += fmt.Sprint("    - [", page.Name, "](", book.Slug, "/", item.Slug, "/", page.Slug, ".md)\n")
+				}
+			case bookstackclient.WikiPage:
+				summaryContents += fmt.Sprint("- [", item.Name, "](", book.Slug, "/", item.Slug, ".md)\n")
+			}
 		}
 	}
 

@@ -50,9 +50,11 @@ func Download(app *config.Application) {
 
 	wg.Wait()
 
-	// Create the Summary.md file
+	// Create the contents of the SUMMARY.md file
 
 	summaryContents := "# Summary\n"
+	summaryContents += "[Introduction](README.md)\n\n"
+
 	for _, book := range w.Books {
 		summaryContents += "\n# " + book.Name + "\n\n"
 		priorityQueue := make([]interface{}, 0)
@@ -91,18 +93,8 @@ func Download(app *config.Application) {
 		}
 	}
 
-	file, err := createFile(path.Clean(fmt.Sprint(app.Config.DownloadLocation, "/SUMMARY.md")))
-	if err != nil {
-		app.Logger.Error().Err(err).Msg("Error creating SUMMARY.md file")
-	}
-
-	_, err = file.Write([]byte(summaryContents))
-	if err != nil {
-		app.Logger.Error().Err(err).Str("page", "SUMMARY.md").Msg("Error writing to file")
-	} else {
-		app.Logger.Info().Msg("Written SUMMARY.md")
-	}
-
+	createFileWithContents(app, summaryContents, fmt.Sprint(app.Config.DownloadLocation, "/SUMMARY.md"))
+	createFileWithContents(app, summaryContents, fmt.Sprint(app.Config.DownloadLocation, "/README.md"))
 }
 
 func downloadPage(app *config.Application, page bookstackclient.WikiPage) {
@@ -126,7 +118,20 @@ func downloadPage(app *config.Application, page bookstackclient.WikiPage) {
 	if err != nil {
 		app.Logger.Error().Err(err).Str("page", page.Name).Msg("Error writing to file")
 	}
+}
 
+func createFileWithContents(app *config.Application, contents string, filepath string) {
+	file, err := createFile(path.Clean(filepath))
+	if err != nil {
+		app.Logger.Error().Err(err).Str("page", filepath).Msg("Error creating file")
+	}
+
+	_, err = file.Write([]byte(contents))
+	if err != nil {
+		app.Logger.Error().Err(err).Str("page", filepath).Msg("Error writing to file")
+	} else {
+		app.Logger.Info().Str("page", filepath).Msg("Written to file")
+	}
 }
 
 // createFile creates nested directories if needed and then calls os.Create

@@ -14,6 +14,8 @@ TODO
 
 ## Usage
 
+Increase the number of API requests allowed per minute in Bookstack by setting `API_REQUESTS_PER_MIN=5000` in your Bookstack config.
+
 One day I'll get time to add the _automatically trigger SSG_ feature. Until then, this generates MdBook format markdown and you have to run the `mdbook build` command yourself.
 
 If you just want markdown without an HTML site then don't run the `mdbook` command.

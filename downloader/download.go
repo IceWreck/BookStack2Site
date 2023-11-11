@@ -7,6 +7,7 @@ import (
 	"path/filepath"
 	"sort"
 	"sync"
+	"time"
 
 	"github.com/IceWreck/BookStack2Site/bookstackclient"
 	"github.com/IceWreck/BookStack2Site/config"
@@ -92,6 +93,7 @@ func Download(app *config.Application) {
 			}
 		}
 	}
+	summaryContents += fmt.Sprintf("\n---\n\nGenerated on %s.\n\n", time.Now().Format(time.RFC850))
 
 	createFileWithContents(app, summaryContents, fmt.Sprint(app.Config.DownloadLocation, "/SUMMARY.md"))
 	createFileWithContents(app, summaryContents, fmt.Sprint(app.Config.DownloadLocation, "/README.md"))
